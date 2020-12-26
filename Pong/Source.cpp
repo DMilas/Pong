@@ -15,18 +15,7 @@ int playerTwoScore = 0;
 
 
 
-void drawGame()
-{
 
-    graphics::Brush br;
-
-    br.outline_opacity = 1.0f;
-
-    graphics::drawLine(0, 0, width, 0, br);
-    graphics::drawLine(0, height, width, height, br);
-
-
-}
 
 
 
@@ -41,11 +30,7 @@ void update(float ms)
     pong->update();
 
 
-    if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
-        cout << "Space Pressed";
-        graphics::setDrawFunction(drawGame);
-        drawGame();
-    }
+    
 
 }
 
@@ -67,6 +52,7 @@ void draw()
 int main()
 {
     Game pong;
+    pong.init();
     graphics::createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Pong");
 
     graphics::setUserData(&pong);
