@@ -1,5 +1,6 @@
 #include "Ball.h"
 #include "graphics.h"
+#include "Config.h"
 
 Ball::Ball()
 {
@@ -78,16 +79,31 @@ void Ball::init()
 
 void Ball::update()
 {
-	pos_y += verticalSpeed;
-	pos_x += horizontalSpeed;
+	if (!curvedFlag) {
+		pos_y += verticalSpeed;
+		pos_x += horizontalSpeed;
+	}
+	else {
+		pos_y += verticalSpeed * sinf(graphics::getGlobalTime() / 500);
+		pos_x += horizontalSpeed;
+	}
 
-
-	//ToDo Fix ball movement
 	if(pos_y < 0)setVerticalSpeed(verticalSpeed*(-1));
 	if(pos_y > CANVAS_HEIGHT)setVerticalSpeed(verticalSpeed*(-1));
 	
 	if (pos_x < 0)setHorizontalSpeed(horizontalSpeed * (-1));
 	if (pos_x > CANVAS_WIDTH)setHorizontalSpeed(horizontalSpeed * (-1));
+
+	//Cheat to curve/uncurve the ball
+	if (graphics::getKeyState(graphics::SCANCODE_C)) {
+		timestamp = graphics::getGlobalTime();
+		curvedFlag = !curvedFlag;
+	}
+
+	//Reset curveFlag
+	if (curvedFlag and (int)(graphics::getGlobalTime()-timestamp) >1000) {
+		curvedFlag = !curvedFlag;
+	}
 
 }
 
@@ -97,5 +113,6 @@ void Ball::draw()
 	br.texture = std::string(ASSET_PATH) + "\\ball.png";
 	br.outline_opacity = 0.0f;
 	graphics::drawDisk(pos_x, pos_y, size, br);
+
 
 }

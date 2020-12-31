@@ -5,10 +5,6 @@
 
 using namespace std;
 
-int height = 800;
-int width = 1200;
-int playerOneScore = 0;
-int playerTwoScore = 0;
 
 
 
@@ -61,7 +57,7 @@ int main()
     graphics::setUpdateFunction(update);
 
 
-    graphics::setCanvasSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+    graphics::setCanvasSize(CANVAS_WIDTH, WINDOW_HEIGHT);
     graphics::setCanvasScaleMode(graphics::CANVAS_SCALE_FIT);
 
 

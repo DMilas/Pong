@@ -1,6 +1,9 @@
 #include "Player.h"
 #include "graphics.h"
+#include "Config.h"
 #include <iostream>
+
+using namespace std;
 
 Player::Player(int pn)
 {
@@ -8,19 +11,20 @@ Player::Player(int pn)
 	switch (playerNumber)
 	{
 	default:
-		std::cout << "Unidentified Player Number";
+		cout << "Unidentified Player Number";
 		break;
 	case 1:
 		pos_x = 10.0f;
 		pos_y = CANVAS_HEIGHT / 2;
-	
+		score = 0;
 		
-		std::cout << "Player One created\n";
+		cout << "Player One created\n";
 		break;
 	case 2:
 		pos_x = CANVAS_WIDTH-10.0f;
 		pos_y = CANVAS_HEIGHT / 2;
-		std::cout << "Player Two created\n";
+		score = 0;
+		cout << "Player Two created\n";
 		break;
 
 	}
@@ -28,7 +32,7 @@ Player::Player(int pn)
 
 Player::~Player()
 {
-	std::cout << "Player " << playerNumber << "has been deleted\n";
+	cout << "Player " << playerNumber << "has been deleted\n";
 }
 
 int Player::getPlayerNumber()
@@ -117,7 +121,7 @@ void Player::update()
 	}
 
 	if (graphics::getKeyState(graphics::SCANCODE_S) and playerNumber == 1) {
-		if(pos_y+barHeight/2<CANVAS_HEIGHT)
+		if(pos_y+barHeight/2< CANVAS_HEIGHT)
 		pos_y += speed;
 	}
 
@@ -139,5 +143,17 @@ void Player::draw()
 	graphics::Brush br;
 	br.texture = std::string(ASSET_PATH) + "\\bar.png";
 	graphics::drawRect(pos_x, pos_y, barWidth,barHeight , br);
+
+
+	graphics::Brush br2;
+	if (playerNumber == 1) {
+		string temp = "Score : " + to_string(score);
+		graphics::drawText(150, 20, 25, temp, br2);
+	}
+
+	if (playerNumber == 2) {
+		string temp = "Score : " + to_string(score);
+		graphics::drawText(CANVAS_WIDTH - 200, 20, 25, temp , br2);
+	}
 
 }

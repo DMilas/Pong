@@ -4,10 +4,20 @@
 
 class Player : public Object
 {
-	float pos_x, pos_y;
-	int playerNumber,barWidth=20,barHeight=75,speed=5,score=0;
+	float pos_x, 
+		pos_y;
+
+	int playerNumber,
+		barWidth=20,
+		barHeight=75,
+		speed=5,
+		score=0;
+
+	bool curveBallFlag,
+		shrinkRayFlag;
 public:
-	
+
+	//Constructors
 	Player(int pn);
 	~Player();
 
@@ -29,6 +39,7 @@ public:
 	void setSpeed(int s);
 	void setScore(int s);
 
+	//functions
 	void init() override;
 	void update() override;
 	void draw() override;
