@@ -9,10 +9,12 @@ ShrinkRay::ShrinkRay(Player* source, Player* target)
 	end_pos_x = target->getPlayerPosX();
 	end_pos_y = target->getPlayerPosY();
 	playerTarget = target;
+	playerSource = source;
 }
 
 ShrinkRay::~ShrinkRay()
 {
+	std::cout << "Ray Deleted";
 }
 
 void ShrinkRay::draw()
@@ -31,20 +33,22 @@ void ShrinkRay::draw()
 
 void ShrinkRay::update()
 {
-	if (start_pos_x>=end_pos_x) 
-		start_pos_x -= int(start_pos_x + end_pos_x) /speed*2;
+	if (start_pos_x >= end_pos_x)
+		start_pos_x -= speed * 2;
 
 	if (start_pos_y >= end_pos_y)
-		start_pos_y -= int(start_pos_y + end_pos_y) /speed;
+		start_pos_y -= speed;
 
-	if (start_pos_x <= end_pos_x) 
-		start_pos_x += int(start_pos_x + end_pos_x) /speed*2;
+	if (start_pos_x <= end_pos_x)
+		start_pos_x += speed * 2;
 
 	if (start_pos_y <= end_pos_y)
-		start_pos_y += int(start_pos_y + end_pos_y) / speed;
+		start_pos_y += speed;
 
-	if (int(start_pos_x) <= int(end_pos_x))
+	if (end_pos_x - 10 <= start_pos_x and start_pos_x <= end_pos_x + 10 and shrinkFlag == false){
 		shrinkPlayer();
+		shrinkFlag = true;
+	}
 }
 
 void ShrinkRay::init()
@@ -56,8 +60,14 @@ void ShrinkRay::shrinkPlayer()
 	//fix timing
 	float temp = playerTarget->getBarHeight();
 	playerTarget->setBarHeight(int(temp / 2));
+	playerSource->setShrinkFlag(true);
 	//fix exit of the loop
-	delete this;
+	
+}
+
+bool ShrinkRay::getShrinkFlag()
+{
+	return shrinkFlag;
 }
 
 float ShrinkRay::calculateAngle()

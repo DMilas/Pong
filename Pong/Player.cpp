@@ -70,6 +70,16 @@ int Player::getScore()
 	return score;
 }
 
+bool Player::getShrinkFlag()
+{
+	return shrinkRayFlag;
+}
+
+bool Player::getCurveBallFlag()
+{
+	return curveBallFlag;
+}
+
 
 
 void Player::setPlayerPosX(float x)
@@ -107,6 +117,16 @@ void Player::setSpeed(int s)
 void Player::setScore(int s)
 {
 	score = s;
+}
+
+void Player::setShrinkFlag(bool flag)
+{
+	shrinkRayFlag = flag;
+}
+
+void Player::setCurveBallFlag(bool flag)
+{
+	curveBallFlag = flag;
 }
 
 void Player::init()

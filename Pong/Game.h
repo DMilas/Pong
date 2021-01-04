@@ -7,7 +7,13 @@
 class Game
 {
 	//Variables
-	enum class State :int { mainMenu=1, running=2 ,paused=3};
+	enum class State :int { 
+		mainMenu=1,
+		running=2 ,
+		paused=3 ,
+		shrinkRay=4,
+		score=5,
+		gameFinished=6};
 	State state;
 	Ball* ball = nullptr;
 	Player* player1 = nullptr;
@@ -23,6 +29,7 @@ public:
 	void init();
 	bool checkPlayerOneCollision();
 	bool checkPlayerTwoCollision();
+	void resetBoard();
 
 	//constructors
 	Game();

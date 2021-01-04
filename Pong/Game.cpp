@@ -7,14 +7,15 @@
 
 void Game::update()
 {
+
 	if (state == State::mainMenu) {
 		if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
+			ball->init();
 			state = State::running;
 		}
 	}
 	else if (state==State::running) {
-		
-		std::cout << graphics::getGlobalTime() << "\n";
+
 
 		//update ball
 		if (ball) {
@@ -45,7 +46,7 @@ void Game::update()
 				if (ball->isOutOfBounds() and ball->getPos_X()<CANVAS_WIDTH/2) {
 					int tempScore = player2->getScore()+1;
 					player2->setScore(tempScore);
-					state=State::paused;
+					state=State::score;
 				}
 			}
 
@@ -58,27 +59,45 @@ void Game::update()
 				if (ball->isOutOfBounds() and ball->getPos_X() > CANVAS_WIDTH / 2) {
 					int tempScore = player1->getScore()+1;
 					player1->setScore(tempScore);
-					state = State::paused;
+					state = State::score;
 				}
 			}
 		}
 
-		//temp Player1 ShrinkRay Activation
-		if (graphics::getKeyState(graphics::SCANCODE_D)) {
+		//Player1 ShrinkRay Activation
+		if (graphics::getKeyState(graphics::SCANCODE_D) and !player1->getShrinkFlag()) {
 			shrinkRay = new ShrinkRay(player1, player2);
-			state = State::paused;
+			state = State::shrinkRay;
+		}
+
+		if (graphics::getKeyState(graphics::SCANCODE_L) and !player2->getShrinkFlag()) {
+			shrinkRay = new ShrinkRay(player2, player1);
+			state = State::shrinkRay;
 		}
 
 	}
-	else if(state==State::paused) {
-
+	else if (state == State::shrinkRay) {
 		if (shrinkRay) {
-			shrinkRay->update();
+			if (shrinkRay)
+				if (!shrinkRay->getShrinkFlag())
+					shrinkRay->update();
+				else {
+					shrinkRay = nullptr;
+					state = State::running;
+				}
 		}
 
+	}
+
+	else if (state == State::score) {
+		resetBoard();
+		state = State::running;
+	}
+
+	else  {
+
 		if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
-			ball->setPosX(CANVAS_WIDTH / 2);
-			ball->setPosY(CANVAS_HEIGHT / 2);
+			
 			state = State::running;
 		}
 	}
@@ -97,11 +116,11 @@ void Game::draw()
 		br2.fill_color[1] = 0.9f;
 		br2.fill_color[2] = 0.9f;
 
-		graphics::drawText(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 4,100, "EXTREME PONG!!!", br2);
-		graphics::drawText(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 50, "Press Space to START", br2);
+		graphics::drawText(CANVAS_WIDTH / 5, CANVAS_HEIGHT / 4,100, "EXTREME PONG!!!", br2);
+		graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press SPACE to START", br2);
 
 	}
-	else if (state == State::running or state==State::paused) {
+	else {
 		//draw ball
 		if (ball) {
 			ball->draw();
@@ -119,10 +138,18 @@ void Game::draw()
 		if (shrinkRay) {
 			shrinkRay->draw();
 		}
+
+		if (state == State::score) {
+			graphics::Brush br;
+
+			graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press Space to Continue", br);
+
+		}
+
 		if (state == State::paused) {
 			graphics::Brush br;
 
-			graphics::drawText(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 50, "Press Space to Continue", br);
+			graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press Space to Continue", br);
 		}
 	}
 	
@@ -134,6 +161,7 @@ void Game::init()
 	player1 = new Player(1);
 	player2 = new Player(2);
 	ball = new Ball(CANVAS_WIDTH/2,CANVAS_HEIGHT/2);
+	
 
 }
 
@@ -177,6 +205,22 @@ bool Game::checkPlayerTwoCollision()
 		return true;
 	}
 	return false;
+}
+
+void Game::resetBoard()
+{
+	player1->setPlayerPosY(CANVAS_HEIGHT / 2);
+	player2->setPlayerPosY(CANVAS_HEIGHT / 2);
+
+	player1->setBarHeight(75);
+	player2->setBarHeight(75);
+
+	ball->setPosX(CANVAS_WIDTH / 2);
+	ball->setPosY(CANVAS_HEIGHT / 2);
+
+	ball->setHorizontalSpeed(2);
+	ball->setVerticalSpeed(2);
+
 }
 
 Game::Game()

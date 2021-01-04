@@ -13,8 +13,8 @@ class Player : public Object
 		speed=5,
 		score=0;
 
-	bool curveBallFlag,
-		shrinkRayFlag;
+	bool curveBallFlag=false,
+		shrinkRayFlag=false;
 public:
 
 	//Constructors
@@ -29,6 +29,8 @@ public:
 	int getBarWidth();
 	int getSpeed();
 	int getScore();
+	bool getShrinkFlag();
+	bool getCurveBallFlag();
 
 	//setters	
 	void setPlayerPosX(float x);
@@ -38,6 +40,8 @@ public:
 	void setBarHeight(int height);
 	void setSpeed(int s);
 	void setScore(int s);
+	void setShrinkFlag(bool flag);
+	void setCurveBallFlag(bool flag);
 
 	//functions
 	void init() override;

@@ -1,6 +1,7 @@
 #include "Ball.h"
 #include "graphics.h"
 #include "Config.h"
+#include <iostream>
 
 Ball::Ball()
 {
@@ -75,6 +76,7 @@ bool Ball::isOutOfBounds()
 
 void Ball::init()
 {
+	speedUpdateTimestamp = graphics::getGlobalTime();
 }
 
 void Ball::update()
@@ -104,6 +106,22 @@ void Ball::update()
 	if (curvedFlag and (int)(graphics::getGlobalTime()-timestamp) >1000) {
 		curvedFlag = !curvedFlag;
 	}
+
+	//Increase ball speed
+	if (graphics::getGlobalTime() - speedUpdateTimestamp > 5000) {
+		if (verticalSpeed > 0)
+			verticalSpeed++;
+		else
+			verticalSpeed--;
+
+		if (horizontalSpeed > 0)
+			horizontalSpeed++;
+		else
+			horizontalSpeed--;
+		speedUpdateTimestamp = graphics::getGlobalTime();
+	}
+
+	
 
 }
 
