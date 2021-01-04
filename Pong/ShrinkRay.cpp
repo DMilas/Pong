@@ -57,11 +57,11 @@ void ShrinkRay::init()
 
 void ShrinkRay::shrinkPlayer()
 {	
-	//fix timing
+
 	float temp = playerTarget->getBarHeight();
 	playerTarget->setBarHeight(int(temp / 2));
 	playerSource->setShrinkFlag(true);
-	//fix exit of the loop
+
 	
 }
 

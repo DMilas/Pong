@@ -9,6 +9,7 @@ void Game::update()
 {
 
 	if (state == State::mainMenu) {
+
 		if (graphics::getKeyState(graphics::SCANCODE_SPACE)) {
 			ball->init();
 			state = State::running;
@@ -70,11 +71,27 @@ void Game::update()
 			state = State::shrinkRay;
 		}
 
+		//Player 2 ShrinkRay Activation
 		if (graphics::getKeyState(graphics::SCANCODE_L) and !player2->getShrinkFlag()) {
 			shrinkRay = new ShrinkRay(player2, player1);
 			state = State::shrinkRay;
 		}
 
+		//Player 1 Redirect Ball
+		if (graphics::getKeyState(graphics::SCANCODE_C) and !player1->getCurveBallFlag()) {
+			ball->bounceBall();
+			player1->setCurveBallFlag(true);
+		}
+
+		//Player 2 Redirect Ball
+		if (graphics::getKeyState(graphics::SCANCODE_K) and !player2->getCurveBallFlag()) {
+			ball->bounceBall();
+			player2->setCurveBallFlag(true);
+		}
+
+		if (player1->getScore() == 5 or player2->getScore() == 5) {
+			state = State::gameFinished;
+		}
 	}
 	else if (state == State::shrinkRay) {
 		if (shrinkRay) {
@@ -106,18 +123,19 @@ void Game::update()
 void Game::draw()
 {
 	graphics::Brush br;
-	br.texture = std::string(ASSET_PATH )+ "\\chalkboard.png";
+	br.texture = std::string(ASSET_PATH )+ "\\background.png";
 	graphics::drawRect(CANVAS_WIDTH / 2, CANVAS_HEIGHT/2, CANVAS_WIDTH, CANVAS_HEIGHT , br);
 	
+	//Draw mainMenu
 	if (state == State::mainMenu) {
 		graphics::Brush br2;
 
 		br2.fill_color[0] = 0.9f;
-		br2.fill_color[1] = 0.9f;
+		br2.fill_color[1] = 0.5f;
 		br2.fill_color[2] = 0.9f;
 
-		graphics::drawText(CANVAS_WIDTH / 5, CANVAS_HEIGHT / 4,100, "EXTREME PONG!!!", br2);
-		graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press SPACE to START", br2);
+		graphics::drawText(CANVAS_WIDTH / 8, CANVAS_HEIGHT / 4,100, "xTREME PoNG!", br2);
+		graphics::drawText(CANVAS_WIDTH / 5, (CANVAS_HEIGHT / 9)*8, 50, "Press SPACE to START", br2);
 
 	}
 	else {
@@ -134,16 +152,13 @@ void Game::draw()
 		if (player2) {
 			player2->draw();
 		}
-
+		//draw shrinkRay
 		if (shrinkRay) {
 			shrinkRay->draw();
 		}
 
 		if (state == State::score) {
-			graphics::Brush br;
-
-			graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press Space to Continue", br);
-
+			
 		}
 
 		if (state == State::paused) {
@@ -151,16 +166,34 @@ void Game::draw()
 
 			graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Press Space to Continue", br);
 		}
+
+		// Draw winner's Text
+		if (state == State::gameFinished) {
+			if (player1->getScore() == 5) {
+				graphics::Brush br;
+
+				graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Player one Won", br);
+				graphics::drawText(CANVAS_WIDTH / 5, (CANVAS_HEIGHT / 9) * 8, 50, "Press SPACE to RESTART", br);
+			}
+
+			if (player2->getScore() == 5) {
+				graphics::Brush br;
+
+				graphics::drawText(CANVAS_WIDTH / 4, CANVAS_HEIGHT / 2, 50, "Player Two Won", br);
+			}
+		}
 	}
 	
 }
 
 void Game::init()
 {
-
+	//Init Game
 	player1 = new Player(1);
 	player2 = new Player(2);
 	ball = new Ball(CANVAS_WIDTH/2,CANVAS_HEIGHT/2);
+	graphics::playMusic(std::string(ASSET_PATH) + "\\Music.mp3", 0.3f, true, 5000);
+
 	
 
 }
@@ -179,8 +212,9 @@ bool Game::checkPlayerOneCollision()
 		)
 		//when successfull redirect ball
 	{
+
+		graphics::playSound(std::string(ASSET_PATH) + "\\Pen Clicking .mp3", 0.5f, false);
 		ball->setHorizontalSpeed(ball->getHorizontalSpeed() * (-1));
-		std::cout << "Collision happened with player one\n";
 		return true;
 	}
 	return false;
@@ -200,8 +234,9 @@ bool Game::checkPlayerTwoCollision()
 		)
 		//when successfull redirect ball
 	{
+
+		graphics::playSound(std::string(ASSET_PATH) + "\\Pen Clicking .mp3", 0.5f, false);
 		ball->setHorizontalSpeed(ball->getHorizontalSpeed() * (-1));
-		std::cout << "Collision happened with player two\n";
 		return true;
 	}
 	return false;

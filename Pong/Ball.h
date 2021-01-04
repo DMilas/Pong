@@ -7,8 +7,8 @@ class Ball : public Object
 {
 
 	float pos_x = CANVAS_WIDTH / 2,
-		pos_y = CANVAS_HEIGHT / 2,
-		speedUpdateTimestamp;
+		pos_y = CANVAS_HEIGHT / 2;
+
 
 	int size = 15,
 		verticalSpeed = 2,
@@ -38,6 +38,7 @@ public:
 	
 	//Functions
 	bool isOutOfBounds();
+	void bounceBall();
 	void init() override;
 	void update() override;
 	void draw() override;

@@ -74,9 +74,14 @@ bool Ball::isOutOfBounds()
 	return pos_x<0 or pos_x>CANVAS_WIDTH;
 }
 
+void Ball::bounceBall()
+{
+	setVerticalSpeed(verticalSpeed * (-1));
+}
+
 void Ball::init()
 {
-	speedUpdateTimestamp = graphics::getGlobalTime();
+	timestamp = graphics::getGlobalTime();
 }
 
 void Ball::update()
@@ -96,19 +101,10 @@ void Ball::update()
 	if (pos_x < 0)setHorizontalSpeed(horizontalSpeed * (-1));
 	if (pos_x > CANVAS_WIDTH)setHorizontalSpeed(horizontalSpeed * (-1));
 
-	//Cheat to curve/uncurve the ball
-	if (graphics::getKeyState(graphics::SCANCODE_C)) {
-		timestamp = graphics::getGlobalTime();
-		curvedFlag = !curvedFlag;
-	}
-
-	//Reset curveFlag
-	if (curvedFlag and (int)(graphics::getGlobalTime()-timestamp) >1000) {
-		curvedFlag = !curvedFlag;
-	}
+	
 
 	//Increase ball speed
-	if (graphics::getGlobalTime() - speedUpdateTimestamp > 5000) {
+	if (graphics::getGlobalTime() - timestamp > 5000) {
 		if (verticalSpeed > 0)
 			verticalSpeed++;
 		else
@@ -118,7 +114,7 @@ void Ball::update()
 			horizontalSpeed++;
 		else
 			horizontalSpeed--;
-		speedUpdateTimestamp = graphics::getGlobalTime();
+		timestamp = graphics::getGlobalTime();
 	}
 
 	

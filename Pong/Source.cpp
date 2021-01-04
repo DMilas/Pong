@@ -48,7 +48,7 @@ void draw()
 int main()
 {
     Game pong;
-    pong.init();
+    
     graphics::createWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Pong");
 
     graphics::setUserData(&pong);
@@ -60,9 +60,9 @@ int main()
     graphics::setCanvasSize(CANVAS_WIDTH, WINDOW_HEIGHT);
     graphics::setCanvasScaleMode(graphics::CANVAS_SCALE_FIT);
 
-
-    graphics::setFont((string)ASSET_PATH+"\\orange juice 2.0.ttf");
-
+    
+    graphics::setFont((string)ASSET_PATH+"\\Font.ttf");
+    pong.init();
     graphics::startMessageLoop();
     graphics::destroyWindow();
 
